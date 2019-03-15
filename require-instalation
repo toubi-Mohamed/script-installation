@@ -1,0 +1,48 @@
+#!/bin/bash
+#installation jenkins :
+wget -q -O - https://pkg.jenkins.io/debian-stable/jenkins.io.key | sudo apt-key add -
+deb https://pkg.jenkins.io/debian-stable binary/
+apt-get update
+apt-get install jenkins
+#installation java
+apt-get install default-jdk
+apt-get install default-jre
+apt install software-properties-common
+add-apt-repository ppa:webupd8team/java
+apt-get update
+apt-get install oracle-java8-installer
+#gérer java
+update-alternatives --config java
+#installer apache
+apt-get install apache2
+#installer php
+apt-get install php7.0 libapache2-mod-php7.0 php7.0-mysql
+#installaion mysql
+apt-get install mysql-server mysql-client mysql-common
+#installer les paquets nécessaire pour composer 
+apt-get install curl php-cli php-mbstring
+#installer composer 
+php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+php -r "if (hash_file('sha384', 'composer-setup.php') === '48e3236262b34d30969dca3c37281b3b4bbe3221bda826ac6a9a62d6444cdb0dcd0615698a5cbe587c3f0fe57a54d8f5') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
+php composer-setup.php --install-dir=/usr/local/bin --filename=composer
+php -r "unlink('composer-setup.php');"
+#installation PHP Quality Assurance tools
+{
+    "require": {
+        "phpunit/phpunit": "3.7.*",
+        "theseer/phpdox": "0.5.*@dev",
+        "squizlabs/php_codesniffer": "1.4.6",
+        "phpmd/phpmd": "1.5.0",
+        "phploc/phploc": "2.0.2",
+        "sebastian/phpcpd": "1.4.3",
+        "phpdocumentor/phpdocumentor": "v2.0.1",
+        "mayflower/php-codebrowser": "1.0.*@dev",
+    }
+}
+#installer les plugins jenkins
+wget wget localhost:8080/jnlpJars/jenkins-cli.jar
+java -jar jenkins-cli.jar -s http://localhost:8080 -auth admin:admin install-plugin checkstyle cloverphp crap4j sec htmlpublisher jdepend complot pmd violations warnings xunit
+java -jar jenkins-cli.jar -s http://localhost:8080 -auth admin:admin safe-restart
+
+
+
